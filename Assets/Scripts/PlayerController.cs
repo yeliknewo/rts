@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : Hero
@@ -43,9 +41,9 @@ public class PlayerController : Hero
 		}
 
 		rigid.AddForce(new Vector3(
-			(walkSpeed.getCalculatedValue(attributes) - Mathf.Abs(rigid.velocity.x)) * xAxis,
+			Utils.GetSpeed(xAxis, rigid.velocity.x, walkSpeed.getCalculatedValue(attributes)),
 			0,
-			(walkSpeed.getCalculatedValue(attributes) - Mathf.Abs(rigid.velocity.z)) * yAxis
+			Utils.GetSpeed(yAxis, rigid.velocity.z, walkSpeed.getCalculatedValue(attributes))
 		), ForceMode.Acceleration);
 
 		if (Input.GetMouseButton(InputManager.BUTTON_MOUSE_LEFT))

@@ -1,6 +1,4 @@
-﻿using System;
-
-public class InputManager
+﻿public class InputManager
 {
 	public const int BUTTON_MOUSE_LEFT = 0;
 	public const string BUTTON_KEY_SPACE = "space";
