@@ -3,10 +3,9 @@
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : Hero
 {
-	public float xAxisMinThreshold = 0.1f;
-	public float yAxisMinThreshold = 0.1f;
-
 	public GameObject prefabProjectile;
+
+	public float agility;
 
 	private float timer = 0f;
 
@@ -20,6 +19,8 @@ public class PlayerController : Hero
 
 	void Update()
 	{
+		agility = attributes[Attributes.Agility];
+
 		timer += Time.deltaTime;
 		if (timer > 1f)
 		{
@@ -27,23 +28,17 @@ public class PlayerController : Hero
 			timer = 0f;
 		}
 
+		float walkSpeedValue = walkSpeed.getCalculatedValue(attributes);
+
 		float xAxis = Input.GetAxis(InputManager.AXIS_X);
-		float yAxis = Input.GetAxis(InputManager.AXIS_Y);
+		float zAxis = Input.GetAxis(InputManager.AXIS_Y);
 
-		if (Mathf.Abs(xAxis) < xAxisMinThreshold)
-		{
-			rigid.AddForce(new Vector3(rigid.velocity.x * -8.0f, 0, 0), ForceMode.Acceleration);
-		}
-
-		if (Mathf.Abs(yAxis) < yAxisMinThreshold)
-		{
-			rigid.AddForce(new Vector3(0, 0, rigid.velocity.z * -8.0f), ForceMode.Acceleration);
-		}
+		rigid.velocity = Utils.UseDrag(rigid.velocity, Mathf.Abs(xAxis) < Mathf.Abs(rigid.velocity.x / walkSpeedValue), Mathf.Abs(zAxis) < Mathf.Abs(rigid.velocity.z / walkSpeedValue), walkSpeedDrag.getCalculatedValue(attributes));
 
 		rigid.AddForce(new Vector3(
-			Utils.GetSpeed(xAxis, rigid.velocity.x, walkSpeed.getCalculatedValue(attributes)),
+			Utils.GetSpeed(xAxis, rigid.velocity.x, walkSpeedValue),
 			0,
-			Utils.GetSpeed(yAxis, rigid.velocity.z, walkSpeed.getCalculatedValue(attributes))
+			Utils.GetSpeed(zAxis, rigid.velocity.z, walkSpeedValue)
 		), ForceMode.Acceleration);
 
 		if (Input.GetMouseButton(InputManager.BUTTON_MOUSE_LEFT))

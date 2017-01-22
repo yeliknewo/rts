@@ -3,10 +3,11 @@
 [RequireComponent(typeof(Rigidbody))]
 public class EnemyController : MonoBehaviour
 {
-
 	public float walkSpeed = 10f;
 
-	private PlayerController player
+	public Vector3 target = Vector3.zero;
+
+	protected PlayerController player
 	{
 		get
 		{
@@ -14,7 +15,7 @@ public class EnemyController : MonoBehaviour
 		}
 	}
 
-	private Rigidbody rigid
+	protected Rigidbody rigid
 	{
 		get
 		{
@@ -22,14 +23,19 @@ public class EnemyController : MonoBehaviour
 		}
 	}
 
-	void Update()
+	protected void Update()
 	{
-		float theta = Mathf.Atan2(player.transform.position.x - transform.position.x, player.transform.position.z - transform.position.z);
+		float theta = Mathf.Atan2(target.x - transform.position.x, target.z - transform.position.z);
+
+		float xAxis = Mathf.Sin(theta);
+		float zAxis = Mathf.Cos(theta);
+
+		rigid.velocity = Utils.UseDrag(rigid.velocity, Mathf.Abs(xAxis) < Mathf.Abs(rigid.velocity.x / walkSpeed), Mathf.Abs(zAxis) < Mathf.Abs(rigid.velocity.z / walkSpeed), 2f);
 
 		rigid.AddForce(new Vector3(
-			Utils.GetSpeed(Mathf.Sin(theta), rigid.velocity.x, walkSpeed),
+			Utils.GetSpeed(xAxis, rigid.velocity.x, walkSpeed),
 			0,
-			Utils.GetSpeed(Mathf.Cos(theta), rigid.velocity.z, walkSpeed)
+			Utils.GetSpeed(zAxis, rigid.velocity.z, walkSpeed)
 		), ForceMode.Acceleration);
 	}
 }
