@@ -9,7 +9,7 @@ public class NavMeshGenerator : MonoBehaviour
 	[SerializeField]
 	private int _threadCount = 4;
 
-	public GameObject enemy;
+	//public GameObject enemy;
 
 	// This is just to test the runtime generation
 	public void Update()
@@ -31,7 +31,7 @@ public class NavMeshGenerator : MonoBehaviour
 	{
 		CoroutineWithData cd = new CoroutineWithData(this, _Generate());
 		yield return cd.coroutine;
-		enemy.SetActive(true);
+		//enemy.SetActive(true);
 	}
 
 	private IEnumerator _Generate()

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -12,10 +13,10 @@ public class MapGenerator : MonoBehaviour
 
 	void Start()
 	{
-		Generate();
+		StartCoroutine("Generate");
 	}
 
-	void Generate()
+	private IEnumerator Generate()
 	{
 		int width = 500;
 		int height = 500;
@@ -27,6 +28,7 @@ public class MapGenerator : MonoBehaviour
 			for (int x = 0; x < width; x++)
 			{
 				trees[x, y] = Random.Range(0, 15) == 0;
+				yield return null;
 			}
 		}
 
@@ -37,6 +39,7 @@ public class MapGenerator : MonoBehaviour
 				if(trees[x,y])
 				{
 					Instantiate(treePrefab, new Vector3(x, 0, y), transform.rotation);
+					yield return null;
 				}
 			}
 		}
