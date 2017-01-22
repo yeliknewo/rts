@@ -2,25 +2,33 @@
 
 public class Stat
 {
-	private Dictionary<Attributes, float> _multipliers = new Dictionary<Attributes, float> ();
-	private Dictionary<Attributes, float> mults {
-		get {
+	private Dictionary<Attributes, float> _multipliers = new Dictionary<Attributes, float>();
+	private Dictionary<Attributes, float> mults
+	{
+		get
+		{
 			return _multipliers;
 		}
 	}
 
 	private float baseLevel;
 
-	public Stat (float newBaseLevel, float strengthMult, float agilityMult, float intelligenceMult)
+	public Stat(float newBaseLevel, float strengthMult, float agilityMult, float intelligenceMult)
 	{
-		this.baseLevel = newBaseLevel;
-		this.mults.Add (Attributes.Strength, strengthMult);
-		this.mults.Add (Attributes.Agility, agilityMult);
-		this.mults.Add (Attributes.Intelligence, intelligenceMult);
+		baseLevel = newBaseLevel;
+		mults.Add(Attributes.Strength, strengthMult);
+		mults.Add(Attributes.Agility, agilityMult);
+		mults.Add(Attributes.Intelligence, intelligenceMult);
 	}
 
-	public float getCalculatedValue(float strength, float agility, float intelligence) {
-		return this.baseLevel + strength * mults [Attributes.Strength] + agility * mults [Attributes.Agility] + intelligence * mults [Attributes.Intelligence];
+	public float getCalculatedValue(Dictionary<Attributes, float> attributes)
+	{
+		return baseLevel + getStatPart(attributes, Attributes.Strength) + getStatPart(attributes, Attributes.Agility) + getStatPart(attributes, Attributes.Intelligence);
+	}
+
+	private float getStatPart(Dictionary<Attributes, float> attributes, Attributes attribute)
+	{
+		return attributes[attribute] * mults[attribute];
 	}
 }
 
