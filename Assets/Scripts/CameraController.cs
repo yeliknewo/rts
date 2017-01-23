@@ -14,11 +14,11 @@ public class CameraController : MonoBehaviour
 		}
 	}
 
-	private GameObject player
+	private PlayerController player
 	{
 		get
 		{
-			return Object.FindObjectOfType<PlayerController>().gameObject;
+			return FindObjectOfType<PlayerController>();
 		}
 	}
 
@@ -26,6 +26,11 @@ public class CameraController : MonoBehaviour
 	{
 		Cursor.lockState = CursorLockMode.Confined;
 		Cursor.visible = false;
+
+		if(player == null)
+		{
+			return;
+		}
 
 		Vector2 mousePos = Input.mousePosition;
 		mousePos.x = Mathf.Clamp(mousePos.x, 0, Screen.width);

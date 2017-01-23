@@ -13,7 +13,7 @@ public class PlayerController : Hero
 	{
 		get
 		{
-			return this.GetComponent<Rigidbody>();
+			return GetComponent<Rigidbody>();
 		}
 	}
 

@@ -13,13 +13,15 @@ public class MapGenerator : MonoBehaviour
 
 	void Start()
 	{
-		StartCoroutine("Generate");
+		Generate();
 	}
 
-	private IEnumerator Generate()
+	private void Generate()
 	{
-		int width = 500;
-		int height = 500;
+		int div = 5;
+
+		int width = 500 / div;
+		int height = 500 / div;
 
 		bool[,] trees = new bool[width, height];
 
@@ -27,19 +29,17 @@ public class MapGenerator : MonoBehaviour
 		{
 			for (int x = 0; x < width; x++)
 			{
-				trees[x, y] = Random.Range(0, 15) == 0;
-				yield return null;
+				trees[x, y] = Random.Range(0, 3) == 0;
 			}
 		}
 
-		for(int y = 0; y< height; y++)
+		for (int y = 0; y < height; y++)
 		{
-			for(int x = 0; x< width; x++)
+			for (int x = 0; x < width; x++)
 			{
-				if(trees[x,y])
+				if (trees[x, y])
 				{
-					Instantiate(treePrefab, new Vector3(x, 0, y), transform.rotation);
-					yield return null;
+					Instantiate(treePrefab, new Vector3(x * div, 0, y * div), transform.rotation);
 				}
 			}
 		}
