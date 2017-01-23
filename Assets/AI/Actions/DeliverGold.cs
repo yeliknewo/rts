@@ -5,7 +5,7 @@ using RAIN.Action;
 using RAIN.Core;
 
 [RAINAction]
-public class RandomWanderTarget : RAINAction
+public class DeliverGold : RAINAction
 {
 
 
@@ -16,7 +16,8 @@ public class RandomWanderTarget : RAINAction
 
 	public override ActionResult Execute(RAIN.Core.AI ai)
 	{
-		ai.WorkingMemory.SetItem<Vector3>(Consts.WANDER_TARGET, new Vector3(Random.Range(-255, 255), 0, Random.Range(-255, 255)));
+		ai.WorkingMemory.SetItem<bool>(Consts.HAS_GOLD, false);
+		ai.WorkingMemory.GetItem<GameObject>(Consts.BASE_FORM).GetComponent<BaseController>().AddGold(1);
 		return ActionResult.SUCCESS;
 	}
 

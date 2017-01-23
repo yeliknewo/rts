@@ -5,9 +5,11 @@ public class PlayerController : Hero
 {
 	public GameObject prefabProjectile;
 
+	public float strength;
 	public float agility;
+	public float intelligence;
 
-	private float timer = 0f;
+	private float lastShotTime;
 
 	private Rigidbody rigid
 	{
@@ -19,21 +21,16 @@ public class PlayerController : Hero
 
 	void Update()
 	{
+		strength = attributes[Attributes.Strength];
 		agility = attributes[Attributes.Agility];
+		intelligence = attributes[Attributes.Intelligence];
 
-		timer += Time.deltaTime;
-		if (timer > 1f)
-		{
-			attributes[Attributes.Agility] += 1;
-			timer = 0f;
-		}
-
-		float walkSpeedValue = walkSpeed.getCalculatedValue(attributes);
+		float walkSpeedValue = walkSpeed.GetCalculatedValue(attributes);
 
 		float xAxis = Input.GetAxis(InputManager.AXIS_X);
 		float zAxis = Input.GetAxis(InputManager.AXIS_Y);
 
-		rigid.velocity = Utils.UseDrag(rigid.velocity, Mathf.Abs(xAxis) < Mathf.Abs(rigid.velocity.x / walkSpeedValue), Mathf.Abs(zAxis) < Mathf.Abs(rigid.velocity.z / walkSpeedValue), walkSpeedDrag.getCalculatedValue(attributes));
+		rigid.velocity = Utils.UseDrag(rigid.velocity, Mathf.Abs(xAxis) < Mathf.Abs(rigid.velocity.x / walkSpeedValue), Mathf.Abs(zAxis) < Mathf.Abs(rigid.velocity.z / walkSpeedValue), walkSpeedDrag.GetCalculatedValue(attributes));
 
 		rigid.AddForce(new Vector3(
 			Utils.GetSpeed(xAxis, rigid.velocity.x, walkSpeedValue),
@@ -49,8 +46,41 @@ public class PlayerController : Hero
 
 	void Shoot()
 	{
-		GameObject projectile = Instantiate<GameObject>(prefabProjectile, transform.position, transform.rotation, transform);
-		projectile.GetComponent<Rigidbody>().velocity = rigid.velocity * projectileSpeed.getCalculatedValue(attributes);
-		projectile.GetComponent<ProjectileController>().SetRange(range.getCalculatedValue(attributes));
+		if (CanShoot())
+		{
+			GameObject projectile = Instantiate<GameObject>(prefabProjectile, transform.position, transform.rotation, transform);
+			projectile.GetComponent<Rigidbody>().velocity = rigid.velocity * projectileSpeed.GetCalculatedValue(attributes);
+			projectile.GetComponent<ProjectileController>().SetRange(range.GetCalculatedValue(attributes));
+			lastShotTime = Time.time;
+		}
+	}
+
+	private bool CanShoot()
+	{
+		return lastShotTime < Time.time - this.shotCooldown.GetCalculatedValue(this.attributes);
+	}
+
+	public void AddStat(EnemyTypes enemyType)
+	{
+		if (enemyType == EnemyTypes.Chaser)
+		{
+			attributes[Attributes.Strength] += 1;
+			attributes[Attributes.Agility] += 1;
+		}
+		else if (enemyType == EnemyTypes.Peasant)
+		{
+			attributes[Attributes.Intelligence] += 1;
+			attributes[Attributes.Agility] += 1;
+		}
+	}
+
+	private void OnCollisionEnter(Collision collision)
+	{
+		if(collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+		{
+			Destroy(gameObject);
+			Destroy(collision.gameObject);
+			Application.Quit();
+		}
 	}
 }

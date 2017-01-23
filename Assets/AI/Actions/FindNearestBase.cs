@@ -5,8 +5,9 @@ using RAIN.Action;
 using RAIN.Core;
 
 [RAINAction]
-public class RememberPlayerLocation : RAINAction
+public class FindNearestBase : RAINAction
 {
+
 
 
 	public override void Start(RAIN.Core.AI ai)
@@ -16,11 +17,7 @@ public class RememberPlayerLocation : RAINAction
 
     public override ActionResult Execute(RAIN.Core.AI ai)
     {
-		if(ai.WorkingMemory.ItemExists(Consts.PLAYER_FORM))
-		{
-			GameObject player = ai.WorkingMemory.GetItem<GameObject>(Consts.PLAYER_FORM);
-			ai.WorkingMemory.SetItem<Vector3>(Consts.PLAYER_LOCATION, player.transform.position);
-		}
+		ai.WorkingMemory.SetItem<Vector3>(Consts.BASE_TARGET, ai.WorkingMemory.GetItem<GameObject>(Consts.BASE_FORM).transform.position);
         return ActionResult.SUCCESS;
     }
 
@@ -29,4 +26,3 @@ public class RememberPlayerLocation : RAINAction
         base.Stop(ai);
     }
 }
-

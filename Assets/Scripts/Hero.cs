@@ -7,8 +7,9 @@ public class Hero : MonoBehaviour
 
 	private Stat _walkSpeed = new Stat(10f, 0.1f, 1f, 0.1f);
 	private Stat _walkSpeedDrag = new Stat(2f, 0.02f, 0.2f, 0.02f);
-	private Stat _projectileSpeed = new Stat(1.5f, 1.0f, 0.1f, 0.1f);
-	private Stat _range = new Stat(2.0f, 0.1f, 0.1f, 1.0f);
+	private Stat _projectileSpeed = new Stat(2.0f, 0.1f, 0.01f, 0.01f);
+	private Stat _range = new Stat(2.0f, 0.1f, 0.1f, 0.5f);
+	private Stat _shotCooldown = new Stat(1.0f, 0f, 0f, 0f);
 
 	protected Stat walkSpeed
 	{
@@ -39,6 +40,14 @@ public class Hero : MonoBehaviour
 		get
 		{
 			return _range;
+		}
+	}
+
+	protected Stat shotCooldown
+	{
+		get
+		{
+			return _shotCooldown;
 		}
 	}
 

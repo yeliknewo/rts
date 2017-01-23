@@ -21,12 +21,12 @@ public class Stat
 		mults.Add(Attributes.Intelligence, intelligenceMult);
 	}
 
-	public float getCalculatedValue(Dictionary<Attributes, float> attributes)
+	public float GetCalculatedValue(Dictionary<Attributes, float> attributes)
 	{
-		return baseLevel + getStatPart(attributes, Attributes.Strength) + getStatPart(attributes, Attributes.Agility) + getStatPart(attributes, Attributes.Intelligence);
+		return baseLevel + GetStatPart(attributes, Attributes.Strength) + GetStatPart(attributes, Attributes.Agility) + GetStatPart(attributes, Attributes.Intelligence);
 	}
 
-	private float getStatPart(Dictionary<Attributes, float> attributes, Attributes attribute)
+	private float GetStatPart(Dictionary<Attributes, float> attributes, Attributes attribute)
 	{
 		return attributes[attribute] * mults[attribute];
 	}

@@ -1,0 +1,1 @@
+<behaviortree version="1.1" repeatuntil="" name="StartWander" debugbreak="False"><expression returnvalue="evaluate" repeatuntil="" name="expression" expression="wander = true" debugbreak="False"></expression></behaviortree>

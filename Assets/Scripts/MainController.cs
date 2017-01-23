@@ -19,12 +19,20 @@ public class MainController : MonoBehaviour {
 		}
 	}
 
+	public void Update()
+	{
+		if(loaded)
+		{
+			foreach (GameObject target in targets)
+			{
+				target.SetActive(true);
+			}
+			targets.Clear();
+		}
+	}
+
 	public void GameLoaded()
 	{
 		loaded = true;
-		foreach(GameObject target in targets)
-		{
-			target.SetActive(true);
-		}
 	}
 }
