@@ -1,11 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ActivateOnLoaded : MonoBehaviour
 {
-	public GameObject[] targets;
-
 	private MainController mainControl
 	{
 		get
@@ -14,14 +10,10 @@ public class ActivateOnLoaded : MonoBehaviour
 		}
 	}
 
-	void Update()
+	private void Awake()
 	{
-		if(mainControl.loaded)
-		{
-			foreach (GameObject gameObject in targets)
-			{
-				gameObject.SetActive(mainControl.loaded);
-			}
-		}
+		mainControl.targets.Add(gameObject);
+		gameObject.SetActive(false);
+		Destroy(this);
 	}
 }

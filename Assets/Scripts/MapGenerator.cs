@@ -5,9 +5,17 @@ public class MapGenerator : MonoBehaviour
 {
 	public GameObject treePrefab;
 
-	private NavMeshGenerator staticNavMesh {
-		get {
-			return Object.FindObjectOfType<NavMeshGenerator>();
+	public Vector3 min;
+	public Vector3 max;
+	public float xStepsDiv;
+	public float zStepsDiv;
+	public int genChance;
+
+	private StaticNavMeshGenerator staticNavMesh
+	{
+		get
+		{
+			return Object.FindObjectOfType<StaticNavMeshGenerator>();
 		}
 	}
 
@@ -18,10 +26,8 @@ public class MapGenerator : MonoBehaviour
 
 	private void Generate()
 	{
-		int div = 5;
-
-		int width = 500 / div;
-		int height = 500 / div;
+		int width = Mathf.RoundToInt((max.x - min.x) / xStepsDiv);
+		int height = Mathf.RoundToInt((max.z - min.z) / zStepsDiv);
 
 		bool[,] trees = new bool[width, height];
 
@@ -29,7 +35,7 @@ public class MapGenerator : MonoBehaviour
 		{
 			for (int x = 0; x < width; x++)
 			{
-				trees[x, y] = Random.Range(0, 3) == 0;
+				trees[x, y] = Random.Range(0, genChance) == 0;
 			}
 		}
 
@@ -39,7 +45,7 @@ public class MapGenerator : MonoBehaviour
 			{
 				if (trees[x, y])
 				{
-					Instantiate(treePrefab, new Vector3(x * div, 0, y * div), transform.rotation);
+					Instantiate(treePrefab, new Vector3(x * xStepsDiv + min.x, 0, y * zStepsDiv + min.z), transform.rotation, transform);
 				}
 			}
 		}

@@ -2,12 +2,14 @@
 using UnityEngine;
 using System.Collections;
 
-public class NavMeshGenerator : MonoBehaviour
+public class ChaserNavMeshGenerator : MonoBehaviour
 {
 	[SerializeField]
 	private bool _test = false;
 	[SerializeField]
 	private int _threadCount = 4;
+
+	private bool generating = false;
 
 	private MainController mainControl
 	{
@@ -29,7 +31,11 @@ public class NavMeshGenerator : MonoBehaviour
 
 	public void GenerateNavMesh()
 	{
-		StartCoroutine("_GenerateNavMesh");
+		if(!generating)
+		{
+			generating = true;
+			StartCoroutine("_GenerateNavMesh");
+		}
 	}
 
 	// This will regenerate the navigation mesh when called
@@ -37,9 +43,9 @@ public class NavMeshGenerator : MonoBehaviour
 	{
 		CoroutineWithData cd = new CoroutineWithData(this, _Generate());
 		yield return cd.coroutine;
-		if((bool)cd.result)
+		if ((bool)cd.result)
 		{
-			mainControl.GameLoaded();
+			generating = false;
 		}
 	}
 

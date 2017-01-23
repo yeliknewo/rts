@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MainController : MonoBehaviour {
+	public List<GameObject> targets = new List<GameObject>();
+
 	private bool _loaded = false;
 
 	public bool loaded
@@ -20,5 +22,9 @@ public class MainController : MonoBehaviour {
 	public void GameLoaded()
 	{
 		loaded = true;
+		foreach(GameObject target in targets)
+		{
+			target.SetActive(true);
+		}
 	}
 }
