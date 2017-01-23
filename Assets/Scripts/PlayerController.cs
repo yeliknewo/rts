@@ -19,6 +19,14 @@ public class PlayerController : Hero
 		}
 	}
 
+	new private Camera camera
+	{
+		get
+		{
+			return Object.FindObjectOfType<Camera>();
+		}
+	}
+
 	void Update()
 	{
 		strength = attributes[Attributes.Strength];
@@ -49,7 +57,7 @@ public class PlayerController : Hero
 		if (CanShoot())
 		{
 			GameObject projectile = Instantiate<GameObject>(prefabProjectile, transform.position, transform.rotation, transform);
-			projectile.GetComponent<Rigidbody>().velocity = rigid.velocity * projectileSpeed.GetCalculatedValue(attributes);
+			projectile.GetComponent<Rigidbody>().velocity = (camera.transform.position - transform.position) * projectileSpeed.GetCalculatedValue(attributes);
 			projectile.GetComponent<ProjectileController>().SetRange(range.GetCalculatedValue(attributes));
 			lastShotTime = Time.time;
 		}
