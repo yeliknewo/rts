@@ -41,4 +41,9 @@ public class BaseController : MonoBehaviour
 	{
 		gold += goldAmount;
 	}
+
+	private void OnDestroy()
+	{
+		Object.FindObjectOfType<PlayerController>().RecalculateUI();
+	}
 }

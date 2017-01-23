@@ -29,6 +29,12 @@ public class PlayerController : Hero
 		}
 	}
 
+	private void OnEnable()
+	{
+		SetupAttributes();
+		RecalculateUI();
+	}
+
 	void Update()
 	{
 		strength = attributes[Attributes.Strength];
@@ -83,6 +89,35 @@ public class PlayerController : Hero
 		else if (enemyType == EnemyTypes.Base)
 		{
 			attributes[Attributes.Intelligence] += 1;
+		}
+		RecalculateUI();
+	}
+
+	public void RecalculateUI()
+	{
+		foreach (CanvasRenderer renderer in FindObjectsOfType<CanvasRenderer>())
+		{
+			UnityEngine.UI.Text text = renderer.GetComponent<UnityEngine.UI.Text>();
+			if (text == null)
+			{
+				continue;
+			}
+			if (text.gameObject.name.Equals("StrengthUI"))
+			{
+				text.text = "Strength: " + attributes[Attributes.Strength];
+			}
+			else if (text.gameObject.name == "AgilityUI")
+			{
+				text.text = "Agility: " + attributes[Attributes.Agility];
+			}
+			else if (text.gameObject.name == "IntelligenceUI")
+			{
+				text.text = "Intelligence: " + attributes[Attributes.Intelligence];
+			}
+			else if (text.gameObject.name == "BaseUI")
+			{
+				text.text = "Base Count: " + Object.FindObjectsOfType<BaseController>().Length;
+			}
 		}
 	}
 
