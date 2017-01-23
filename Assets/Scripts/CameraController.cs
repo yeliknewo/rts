@@ -25,9 +25,9 @@ public class CameraController : MonoBehaviour
 	void Update()
 	{
 		Cursor.lockState = CursorLockMode.Confined;
-		Cursor.visible = false;
+		//Cursor.visible = false;
 
-		if(player == null)
+		if (player == null)
 		{
 			return;
 		}

@@ -9,6 +9,8 @@ public class PlayerController : Hero
 	public float agility;
 	public float intelligence;
 
+	public float accelerationMultiplier;
+
 	private float lastShotTime;
 
 	private Rigidbody rigid
@@ -44,7 +46,7 @@ public class PlayerController : Hero
 			Utils.GetSpeed(xAxis, rigid.velocity.x, walkSpeedValue),
 			0,
 			Utils.GetSpeed(zAxis, rigid.velocity.z, walkSpeedValue)
-		), ForceMode.Acceleration);
+		) * accelerationMultiplier, ForceMode.Acceleration);
 
 		if (Input.GetMouseButton(InputManager.BUTTON_MOUSE_LEFT))
 		{
@@ -73,18 +75,20 @@ public class PlayerController : Hero
 		if (enemyType == EnemyTypes.Chaser)
 		{
 			attributes[Attributes.Strength] += 1;
-			attributes[Attributes.Agility] += 1;
 		}
 		else if (enemyType == EnemyTypes.Peasant)
 		{
-			attributes[Attributes.Intelligence] += 1;
 			attributes[Attributes.Agility] += 1;
+		}
+		else if (enemyType == EnemyTypes.Base)
+		{
+			attributes[Attributes.Intelligence] += 1;
 		}
 	}
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		if(collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+		if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
 		{
 			Destroy(gameObject);
 			Destroy(collision.gameObject);

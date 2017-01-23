@@ -7,8 +7,6 @@ using RAIN.Core;
 [RAINAction]
 public class RandomWanderTarget : RAINAction
 {
-
-
 	public override void Start(RAIN.Core.AI ai)
 	{
 		base.Start(ai);
@@ -16,7 +14,8 @@ public class RandomWanderTarget : RAINAction
 
 	public override ActionResult Execute(RAIN.Core.AI ai)
 	{
-		ai.WorkingMemory.SetItem<Vector3>(Consts.WANDER_TARGET, new Vector3(Random.Range(-255, 255), 0, Random.Range(-255, 255)));
+		MapGenerator map = Object.FindObjectOfType<MapGenerator>();
+		ai.WorkingMemory.SetItem<Vector3>(Consts.WANDER_TARGET, new Vector3(Random.Range(map.min.x, map.max.x), 0, Random.Range(map.min.z, map.max.z)));
 		return ActionResult.SUCCESS;
 	}
 

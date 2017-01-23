@@ -11,4 +11,5 @@ public enum EnemyTypes
 {
 	Chaser,
 	Peasant,
+	Base,
 }

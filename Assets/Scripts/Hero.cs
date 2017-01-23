@@ -6,10 +6,10 @@ public class Hero : MonoBehaviour
 	private Dictionary<Attributes, float> _attributes = new Dictionary<Attributes, float>();
 
 	private Stat _walkSpeed = new Stat(10f, 0.1f, 1f, 0.1f);
-	private Stat _walkSpeedDrag = new Stat(2f, 0.02f, 0.2f, 0.02f);
-	private Stat _projectileSpeed = new Stat(2.0f, 0.1f, 0.01f, 0.01f);
-	private Stat _range = new Stat(2.0f, 0.1f, 0.1f, 0.5f);
-	private Stat _shotCooldown = new Stat(1.0f, 0f, 0f, 0f);
+	private Stat _walkSpeedDrag = new Stat(10f, 0.1f, 1f, 0.1f);
+	private Stat _projectileSpeed = new Stat(8.0f, 0.5f, 0.05f, 0.05f);
+	private Stat _range = new Stat(1.0f, 0.1f, 0.1f, 0.5f);
+	private Stat _shotCooldown = new Stat(1.0f, 0f, 0f, -0.05f);
 
 	protected Stat walkSpeed
 	{
