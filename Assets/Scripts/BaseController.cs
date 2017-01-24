@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BaseController : MonoBehaviour
 {
-
 	public GameObject peasantPrefab;
 	public GameObject chaserPrefab;
 
@@ -13,26 +12,49 @@ public class BaseController : MonoBehaviour
 	public int peasantCost = 2;
 	public int chaserCost = 4;
 
-	public int peasantSpawnChance = 3;
 	public int maxEnemyCount = 50;
 
-	private bool spawnPeasantNext = true;
+	public int maxPeasantCount = 5;
+	public int minPeasantCount = 2;
+
+	public float maxChaserSpawnRange = 10f;
+
+	public float spawnCooldown = 1.0f;
+
+	private float timer = 0.0f;
+
+	private PlayerController _player = null;
+
+	private PlayerController player
+	{
+		get
+		{
+			if (_player == null)
+			{
+				return FindObjectOfType<PlayerController>();
+			}
+			else
+			{
+				return _player;
+			}
+		}
+	}
 
 	void Update()
 	{
-		if(FindObjectsOfType<EnemyType>().Length < maxEnemyCount)
+		if (GetComponentsInChildren<EnemyType>().Length < maxEnemyCount && timer < Time.time)
 		{
-			if (spawnPeasantNext && gold >= peasantCost)
+			if (ShouldSpawnPeasant() && gold >= peasantCost)
 			{
 				gold -= peasantCost;
 				Instantiate(peasantPrefab, transform.position, transform.rotation, transform);
-				spawnPeasantNext = Random.Range(0, peasantSpawnChance) == 0;
+				timer = Time.time + spawnCooldown;
 			}
-			else if (gold >= chaserCost)
+			else if (ShouldSpawnChaser() && gold >= chaserCost)
 			{
 				gold -= chaserCost;
 				Instantiate(chaserPrefab, transform.position, transform.rotation, transform);
-				spawnPeasantNext = true;
+				timer = Time.time + spawnCooldown;
 			}
 		}
 	}
@@ -42,8 +64,95 @@ public class BaseController : MonoBehaviour
 		gold += goldAmount;
 	}
 
+	private bool ShouldSpawnPeasant()
+	{
+		return (!ShouldSpawnChaser() && GetPeasantCount() < GetMaxPeasants()) || GetPeasantCount() < GetMinPeasants();
+	}
+
+	private bool ShouldSpawnChaser()
+	{
+		if (player == null)
+		{
+			return false;
+		}
+		return Vector3.Distance(player.transform.position, transform.position) < GetChaserSpawnRange();
+	}
+
+	private int GetPeasantCount()
+	{
+		int sum = 0;
+		foreach (EnemyType et in GetComponentsInChildren<EnemyType>())
+		{
+			if (et.enemyType == EnemyTypes.Peasant)
+			{
+				sum += 1;
+			}
+		}
+		return sum;
+	}
+
+	private int GetMaxPeasants()
+	{
+		return maxPeasantCount;
+	}
+
+	private int GetMinPeasants()
+	{
+		return minPeasantCount;
+	}
+
+	private int GetChaserCount()
+	{
+		int sum = 0;
+		foreach (EnemyType et in GetComponentsInChildren<EnemyType>())
+		{
+			if (et.enemyType == EnemyTypes.Chaser)
+			{
+				sum = +1;
+			}
+		}
+		return sum;
+	}
+
+	private float GetChaserSpawnRange()
+	{
+		return maxChaserSpawnRange;
+	}
+
 	private void OnDestroy()
 	{
-		Object.FindObjectOfType<PlayerController>().RecalculateUI();
+		if (player != null)
+		{
+			player.RecalculateUI();
+		}
+		GameObject newBase = null;
+		foreach (EnemyType et in FindObjectsOfType<EnemyType>())
+		{
+			if (et.enemyType == EnemyTypes.Base && et.gameObject != gameObject)
+			{
+				newBase = et.gameObject;
+				break;
+			}
+		}
+		if (newBase != null)
+		{
+			foreach (EnemyType et in GetComponentsInChildren<EnemyType>())
+			{
+				if (et.enemyType == EnemyTypes.Peasant)
+				{
+					Vector3 location = et.transform.position;
+					Destroy(et.gameObject);
+					Instantiate(chaserPrefab, location, newBase.transform.rotation, newBase.transform);
+				}
+				else if (et.enemyType == EnemyTypes.Chaser)
+				{
+					et.transform.parent = newBase.transform;
+				}
+			}
+		}
+		else
+		{
+			Destroy(FindObjectOfType<MapGenerator>().gameObject);
+		}
 	}
 }

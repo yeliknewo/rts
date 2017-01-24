@@ -11,9 +11,17 @@ public class MapGenerator : MonoBehaviour
 	public Vector3 max;
 	public float xStepsDiv;
 	public float zStepsDiv;
+
+	public int goldTarget;
+	public int baseTarget;
+
 	public int treeGenChance;
 	public int goldGenChance;
 	public int baseGenChance;
+
+	private GameObject enemyParent;
+	private GameObject treeParent;
+	private GameObject goldParent;
 
 	private StaticNavMeshGenerator staticNavMesh
 	{
@@ -30,6 +38,18 @@ public class MapGenerator : MonoBehaviour
 
 	private void Generate()
 	{
+		enemyParent = new GameObject();
+		enemyParent.name = "EnemyParent";
+		enemyParent.transform.parent = transform;
+
+		treeParent = new GameObject();
+		treeParent.name = "TreeParent";
+		treeParent.transform.parent = transform;
+
+		goldParent = new GameObject();
+		goldParent.name = "GoldParent";
+		goldParent.transform.parent = transform;
+
 		int width = Mathf.RoundToInt((max.x - min.x) / xStepsDiv);
 		int height = Mathf.RoundToInt((max.z - min.z) / zStepsDiv);
 
@@ -37,22 +57,28 @@ public class MapGenerator : MonoBehaviour
 		{
 			for (int x = 0; x < width; x++)
 			{
+				Transform parent = transform;
 				GameObject targetPrefab = null;
-				if (Random.Range(0, baseGenChance) == 0)
+				if (Random.Range(0, baseGenChance) <= baseTarget)
 				{
+					baseTarget -= 1;
 					targetPrefab = basePrefab;
+					parent = enemyParent.transform;
 				}
 				else if (Random.Range(0, treeGenChance) == 0)
 				{
 					targetPrefab = treePrefab;
+					parent = treeParent.transform;
 				}
-				else if (Random.Range(0, goldGenChance) == 0)
+				else if (Random.Range(0, goldGenChance) <= goldTarget)
 				{
+					goldTarget -= 1;
 					targetPrefab = goldPrefab;
+					parent = goldParent.transform;
 				}
 				if (targetPrefab != null)
 				{
-					Instantiate(targetPrefab, new Vector3(x * xStepsDiv + min.x, 0, y * zStepsDiv + min.z), transform.rotation, transform);
+					Instantiate(targetPrefab, new Vector3(x * xStepsDiv + min.x, 0, y * zStepsDiv + min.z), transform.rotation, parent);
 				}
 			}
 		}
